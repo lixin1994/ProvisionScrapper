@@ -11,34 +11,28 @@ S = c.read()
 soup = BeautifulSoup(S, 'html.parser')
 
 provisions = []
-for i in soup.find_all('p', style=re.compile('^.*(font-size:10.0pt;|margin:0pt 0pt 12.0pt;|text-indent:36.0pt).*$')):
-    if i.find('b'):
-        k = i.find('b').find('font')
-        if k:
-            num = None
-            try:
-                num = re.findall(r'\d+\.\d+',str(k.string))[0]
-            except:
-                num = None
-            nameLetters = re.findall(r'[a-zA-Z]+',str(k.string))
-            content = re.sub("<[^>]*>",'',str(i))
-            if nameLetters ==[]:
-                name = re.findall(r'[a-zA-Z ]+\.', content)[0]
-            else:
-                name = ' '.join(nameLetters)
-            content = ' '.join(re.findall(r'[a-zA-Z]+', content))
-            if num and name!= content:
-                provision = {}
-                provision= {
-                'num': num.lower().lstrip(),
-                'name': name.lower().lstrip(),
-                'content':  content.lower().lstrip(),
-                }
-                provisions.append(provision)
-
+for i in soup.find_all('p', style=re.compile('^.*(font-size|margin|text-indent).*$')):
+    content = re.sub("<[^>]*>",'',str(i))
+    name = None
+    try:
+        name = re.findall(r'[a-zA-Z ]+\.', content)[0]
+    except:
+        name = None
+    num = None
+    try:
+        num = re.findall(r'\d+\.\d*',content)[0]
+    except:
+        num = None
+    content = ' '.join(re.findall(r'[a-zA-Z]+', content))
+    if num and name and name!= content:
+        provision = {}
+        provision= {
+        'num': num.lower().lstrip(),
+        'name': name.lower().lstrip(),
+        'content':  content.lower().lstrip(),
+        }
+        provisions.append(provision)
 row = 0
-
-
 # Iterate over the data and write it out row by row.
 for p in provisions:
     col = 0
