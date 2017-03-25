@@ -14,6 +14,8 @@ provisions = []
 for i in soup.find_all('p', style=re.compile('^.*(font-size|margin|text-indent).*$')):
     content = re.sub("<[^>]*>",'',str(i))
     name = None
+    bold = 'false'
+    underscore = 'false'
     try:
         name = re.findall(r'[a-zA-Z ]+\.', content)[0]
     except:
@@ -23,12 +25,18 @@ for i in soup.find_all('p', style=re.compile('^.*(font-size|margin|text-indent).
         num = re.findall(r'\d+\.\d*',content)[0]
     except:
         num = None
+    if i and i.b:
+        bold = 'true'
+    if i and re.findall(r'^.*(underline).*$', str(i)):
+        underscore = 'true'
     content = ' '.join(re.findall(r'[a-zA-Z]+', content))
     if num and name and name!= content:
         provision = {}
         provision= {
         'num': num.lower().lstrip(),
         'name': name.lower().lstrip(),
+        'bold': bold,
+        'underscore': underscore,
         'content':  content.lower().lstrip(),
         }
         provisions.append(provision)
