@@ -7,7 +7,7 @@ import urllib.request
 
 '''
 input: String url
-output: List<List>
+output: List<List(index, name, isbold, isunderscore, content)>
 
 Using the url to get the html codes and using BeautifulSoup to scrap the
 information of the contract
